@@ -1,7 +1,4 @@
 import { ExpressServer } from './ExpressServer'
-import { CatEndpoints } from './cats/CatEndpoints'
-import { CatService } from './cats/CatService'
-import { CatRepository } from './cats/CatRepository'
 import { Environment } from './Environment'
 
 /**
@@ -10,9 +7,9 @@ import { Environment } from './Environment'
  */
 export class Application {
     public static async createApplication() {
-        const catService = new CatService(new CatRepository())
-        const requestServices = { catService }
-        const expressServer = new ExpressServer(new CatEndpoints(), requestServices)
+
+
+        const expressServer = new ExpressServer()
 
         await expressServer.setup(Environment.getPort())
         Application.handleExit(expressServer)
