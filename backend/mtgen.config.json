@@ -1,0 +1,4 @@
+{
+  "imports": [],
+  "output": "./src/types/mongoose-types.ts"
+}

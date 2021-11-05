@@ -9,6 +9,7 @@ import * as cors from 'cors'
 import * as bodyParser from 'body-parser'
 import * as cookieParser from 'cookie-parser'
 import * as RateLimit from 'express-rate-limit'
+import router from "./routes/router"
 
 
 
@@ -80,13 +81,8 @@ export class ExpressServer {
     }
 
     private configureApiEndpoints(server: Express) {
-        const strictRateLimit = new RateLimit({
-            windowMs: 15 * 60 * 1000, // 15 min in ms
-            max: 200,
-            message: 'This endpoint has a stricter rate limiting of a maximum of 200 requests per 15 minutes window, please lower your request rate'
-        })
 
-        server.use( )
+        server.use('api/', router )
     }
 
 

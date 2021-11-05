@@ -1,18 +1,20 @@
 {
     "compilerOptions": {
         "outDir": "./lib",
-        "allowJs": false, //TODO
+        "allowJs": false,
         "target": "es2017",
         "module": "commonjs",
         "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
         "sourceMap": true,
         "strict": true,
         "experimentalDecorators": true,
         "jsx": "react",
+        "removeComments": true,
         "importHelpers": true,
         "lib": [ "es2017", "dom" ]
     },
     "include": [
-        "./service/**/*"
+        "./**/*"
     ]
 }
