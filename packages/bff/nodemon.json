@@ -1,0 +1,6 @@
+{
+  "watch": ["./src"],
+  "e": "ts",
+  "ignore": ["*.test.ts", "*.spec.ts"],
+  "exec": "npm-run-all genTypes dev-server "
+}

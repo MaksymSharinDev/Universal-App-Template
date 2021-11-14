@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      dockerfile: ./packages/bff/Dockerfile.local
+    environment:
+      env: ./env.local
+
+  web:
+    build:
+      dockerfile: ./packages/web/Dockerfile.local
+    environment:
+      env: ./env.local
+
+  firebase:
+    build:
+      context: ../packages/dev-tools/firebase-emulator
+      dockerfile: ./Dockerfile.local
+    volumes:
+      - .:/src
+    #expose:
+    # - 4400
+    # - 4500
+    # - 5000 hosting
+    # - 5001 functions
+    # - 8001 ui
+    # - 8080 firestore
+    # - 9000 Database
+    # - 8085 pubsub   #
+    command: firebase emulators:start
+
+  mobile:
+    build:
+      dockerfile: ./packages/mobile/Dockerfile.local
+    environment:
+      env: ./env.local
+    ports:
+        - "127.0.0.1:6080:6080" # noVNC
+
+  test-mobile:
+    build:
+      dockerfile: ./packages/mobile/Dockerfile.emu-test
+      context: ../
+    environment:
+      env: ../env.local
+    ports:
+      - "127.0.0.1:6080:8080" # noVNC
+
+  #mobile-emu:
+  #  privileged: true #only when strictly necessary
+  #  image: budtmo/docker-android-x86-10.0:v1.10-p2
+  #  environment:
+  #    env: ./env.local
+  #  ports:
+  #    - "127.0.0.1:6080:6080" # noVNC
+  #  expose:
+  #    - "4723" # Appium
+  #    - "5554" # Emulator port
+  #    - "5555" # ADB connection
+

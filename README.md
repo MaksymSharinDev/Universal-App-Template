@@ -1,5 +1,33 @@
+<!---
+#TODO: \
+Explain dependency management for containerized monorepo's apps as packages 
+Problem: Package Cross-reference, 
+Strategy: use private packages with local npm registry
+Contexts: Docker Containers, yarn workspace
 
+https://xfor.medium.com/yarn-workspaces-and-docker-39e30402b69b
+--->
 
+<!---
+explain android dockerization 
+
+--->
+
+<!---
+explain docker containerization of the 3 types of services in 
+- local
+  - web : hot reload and proxy server 
+  - bff-service : nodemon hot-reload 
+  - local mongo db 
+  - mobile: dockerized android hot reload
+  - firebase tools : https://github.com/AndreySenov/firebase-tools-docker
+
+- test 
+  - web:  with unit test
+  - bff-service:  with unit test
+  - mobile: unit test
+- stage - prod
+--->
 
 ## Description
 A Multiplatform App Mobile-first & Offline-first 
@@ -384,3 +412,6 @@ main middleware chains
 
 
 </div>
+
+### Credits:
+- 

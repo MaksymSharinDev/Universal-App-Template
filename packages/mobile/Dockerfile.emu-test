@@ -1,0 +1,95 @@
+FROM debian:buster as setup-vnc
+#us-docker.pkg.dev/android-emulator-268719/images/28-playstore-x64:30.1.2
+
+# noVNC SETUP
+#---------------------------------------------------
+#Import setup files
+COPY /packages/mobile/container/VNC /scripts/VNC
+WORKDIR /scripts/VNC
+
+# Install git, supervisor, noVNC, & X11 packages
+RUN sh ./novnc-install.sh
+
+# Setup noVNC environment variables \
+ENV \
+HOME=/root \
+DEBIAN_FRONTEND=noninteractive \
+LANG=en_US.UTF-8 \
+LANGUAGE=en_US.UTF-8 \
+LC_ALL=C.UTF-8 \
+DISPLAY=:0.0 \
+DISPLAY_WIDTH=1024 \
+DISPLAY_HEIGHT=768 \
+RUN_XTERM=yes \
+RUN_FLUXBOX=yes
+# Expose noVNC port
+EXPOSE 8080
+#---------------------------------------------------
+
+FROM setup-vnc as node
+
+# React Native Build Tools setup
+#---------------------------------------------------
+#Import setup files
+COPY /packages/mobile/container/Node /scripts/Node
+
+WORKDIR /scripts/Node
+ARG NODE_VERSION=14
+ARG YARN_VERSION=1.22.10
+
+RUN sh ./base.sh
+RUN sh ./build-node-yarn.sh
+#---------------------------------------------------
+
+FROM node as android-sdk
+
+# JAVA+ANDROID
+#---------------------------------------------------
+#Import setup files
+COPY /packages/mobile/container/Android /scripts/Android
+
+WORKDIR /scripts/Android
+ARG ANDROID_SDK_VERSION=7583922
+ARG ANDROID_PLATFORM=29
+ARG BUILD_TOOLS_VERSION=30.0.0
+ENV ANDROID_SDK_ROOT='/Android'
+
+RUN sh ./get-open-jdk.sh
+RUN sh ./get-sdk-tools.sh
+
+ENV PATH="${PATH}:${ANDROID_SDK_ROOT}/cmdline-tools/bin/"
+ENV PATH="${PATH}:${ANDROID_SDK_ROOT}/cmdline-tools/lib/"
+#---------------------------------------------------
+
+#FROM android-sdk as android-emu
+
+# Android Device
+#---------------------------------------------------
+#ENV ANDROID_IMAGE=system-images;android-${ANDROID_PLATFORM};google_apis_playstore;x86
+#ENV EMU_NAME=EMULATOR
+#RUN touch /root/.android/repositories.cfg
+
+#RUN sdkmanager --sdk_root=${ANDROID_SDK_ROOT} \
+# --install ${ANDROID_IMAGE} \
+
+#RUN echo "no" | avdmanager --sdk_root=${ANDROID_SDK_ROOT} \
+#    --verbose create avd --force \
+#    --name "${EMU_NAME}" --package "${ANDROID_IMAGE}" \
+#    --tag "google_apis_playstore" --abi "x86" \
+
+#---------------------------------------------------
+#ENV PATH="${PATH}:${ANDROID_SDK_ROOT}/emulator"
+#RUN sh ./get-and-compile-emu.sh
+
+CMD \
+# noVNC stack EXECUTION
+sh /scripts/VNC/cmd-exec-vnc.sh \
+& emulator -avd EMULATOR \
+#no-stop trick
+& tail -f /dev/null
+
+
+
+
+
+
